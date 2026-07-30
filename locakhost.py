@@ -50,7 +50,7 @@ class App:
         self.port_var = tk.StringVar(value=str(DEFAULT_PORT))
         self.status_var = tk.StringVar(value="Not running")
 
-        root.title("Local Host")
+        root.title("LocakHost")
         root.resizable(False, False)
         pad = {"padx": 10, "pady": 6}
 
