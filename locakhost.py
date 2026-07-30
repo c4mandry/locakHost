@@ -1,13 +1,4 @@
 #!/usr/bin/env python3
-"""
-Local Host - a tiny GUI app to host a folder as a local website.
-
-Works on macOS and Linux. Requires Python 3 with tkinter (usually pre-installed
-on macOS; on Linux you may need: sudo apt install python3-tk).
-
-Usage:
-    python3 local_host.py
-"""
 
 import http.server
 import socketserver
