@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 
 import http.server
+import os
 import socketserver
+import subprocess
+import sys
 import threading
 import webbrowser
 import tkinter as tk
@@ -10,27 +13,60 @@ from tkinter import filedialog, messagebox
 DEFAULT_PORT = 8080
 
 
+class SPARequestHandler(http.server.SimpleHTTPRequestHandler):
+    """Fallback handler for pre-built static SPAs."""
+
+    def do_GET(self):
+        requested_path = self.translate_path(self.path)
+        if not os.path.exists(requested_path) and "." not in os.path.basename(
+            self.path
+        ):
+            self.path = "/index.html"
+        return super().do_GET()
+
+
 class Server:
     def __init__(self):
         self.httpd = None
         self.thread = None
+        self.proc = None
 
-    def start(self, folder: str, port: int):
-        if self.httpd is not None:
+    def start(self, folder: str, port: int, spa_mode: bool = True):
+        if self.running:
             raise RuntimeError("Server already running")
 
-        handler = lambda *args, **kwargs: http.server.SimpleHTTPRequestHandler(
-            *args, directory=folder, **kwargs
-        )
+        package_json = os.path.join(folder, "package.json")
 
-        # allow_reuse_address avoids "port already in use" right after stopping
-        socketserver.TCPServer.allow_reuse_address = True
-        self.httpd = socketserver.TCPServer(("0.0.0.0", port), handler)
+        # 1. AUTO-VITE MODE: If package.json exists, launch npx vite automatically
+        if os.path.exists(package_json):
+            cmd = ["npx", "vite", "--port", str(port), "--host"]
+            use_shell = sys.platform.startswith("win")
+            try:
+                self.proc = subprocess.Popen(cmd, cwd=folder, shell=use_shell)
+            except Exception as e:
+                raise OSError(f"Could not launch Vite background process:\n{e}")
 
-        self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
-        self.thread.start()
+        # 2. PYTHON MODE: Standard static folder hosting
+        else:
+            handler_cls = (
+                SPARequestHandler if spa_mode else http.server.SimpleHTTPRequestHandler
+            )
+            handler = lambda *args, **kwargs: handler_cls(
+                *args, directory=folder, **kwargs
+            )
+
+            socketserver.TCPServer.allow_reuse_address = True
+            self.httpd = socketserver.TCPServer(("0.0.0.0", port), handler)
+            self.thread = threading.Thread(target=self.httpd.serve_forever, daemon=True)
+            self.thread.start()
 
     def stop(self):
+        # Stop background Node/Vite process if active
+        if self.proc is not None:
+            self.proc.terminate()
+            self.proc = None
+
+        # Stop Python HTTP server if active
         if self.httpd is not None:
             self.httpd.shutdown()
             self.httpd.server_close()
@@ -39,7 +75,9 @@ class Server:
 
     @property
     def running(self):
-        return self.httpd is not None
+        return self.httpd is not None or (
+            self.proc is not None and self.proc.poll() is None
+        )
 
 
 class App:
@@ -112,13 +150,17 @@ class App:
 
         try:
             self.server.start(folder, port)
-        except OSError as e:
+        except Exception as e:
             messagebox.showerror("Error", f"Could not start server:\n{e}")
             return
 
         self.host_btn.config(text="Stop")
         self.open_btn.config(state="normal")
-        self.status_var.set(f"Hosting {folder} at http://localhost:{port}")
+
+        if os.path.exists(os.path.join(folder, "package.json")):
+            self.status_var.set(f"Running Vite project at http://localhost:{port}")
+        else:
+            self.status_var.set(f"Hosting {folder} at http://localhost:{port}")
 
     def open_browser(self):
         port = self.port_var.get().strip() or str(DEFAULT_PORT)
