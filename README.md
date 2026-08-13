@@ -33,4 +33,4 @@ LocakHost runs on **Python 3.8+**. It uses standard Python libraries, including 
   sudo xbps-install -S tk
 
 ### 2. how to run 
-   #### macos - "brewe install python-tk && python3 your/directory/to/locakhost.py $(: like for example: ~/downloads/locakhost)"
+   #### macos - "brew install python-tk && python3 your/directory/to/locakhost.py $(: like for example: ~/downloads/locakhost)"
