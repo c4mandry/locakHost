@@ -1,7 +1,7 @@
 #  LocakHost
 
 > **The zero-terminal, point-and-click local web server for frontend developers.**
-> **runs using vite
+> **runs using vite**
 
 easiest way to run complex websites with a gui programm. works with all sorts of websites, so leav the nmp stuff behind and use this.
 
