@@ -1,6 +1,7 @@
 #  LocakHost
 
 > **The zero-terminal, point-and-click local web server for frontend developers.**
+> **runs using vite
 
 easiest way to run complex websites with a gui programm. works with all sorts of websites, so leav the nmp stuff behind and use this.
 
@@ -13,7 +14,7 @@ easiest way to run complex websites with a gui programm. works with all sorts of
 *  **Smart Folder Detection:** Automatically detects project roots and `index.html` files.
 *  **Port Binding Control:** Easily switch between custom ports or let LocakHost auto-detect an open one.
 *  **Clean System Exit:** Kills background child processes and frees network sockets when closed—no stuck ports!
-*  **Can open up your website in your browser with just one click
+*  **one click to open in browser**: can open up your website in your browser with just one click.
 
 ---
 
