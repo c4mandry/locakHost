@@ -2,17 +2,18 @@
 
 > **The zero-terminal, point-and-click local web server for frontend developers.**
 
-LocakHost is a lightweight desktop app built to serve static websites and modern Single Page Applications (SPAs) instantly. No terminal commands, no complex server setups—just select your folder, click start, and preview your work in the browser.
+easiest way to run complex websites with a gui programm. works with all sorts of websites, so leav the nmp stuff behind and use this.
 
 ---
 
-## 📸 Overview & Key Features
+##  Overview & Key Features
 
 *  **100% Graphical (GUI):** No CLI experience required.
 *  **SPA Route Fallback:** Built-in support for single-page apps (React, Vue, Vite, Svelte) to prevent `404 Not Found` errors when refreshing sub-routes like `/dashboard`.
 *  **Smart Folder Detection:** Automatically detects project roots and `index.html` files.
 *  **Port Binding Control:** Easily switch between custom ports or let LocakHost auto-detect an open one.
 *  **Clean System Exit:** Kills background child processes and frees network sockets when closed—no stuck ports!
+*  **Can open up your website in your browser with just one click
 
 ---
 
