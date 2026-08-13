@@ -34,3 +34,4 @@ LocakHost runs on **Python 3.8+**. It uses standard Python libraries, including 
 
 ### 2. how to run 
    #### macos - "brew install python-tk && python3 your/directory/to/locakhost.py $(: like for example: ~/downloads/locakhost)"
+   #### linux - "$(: first install python-tk in your way) python3 your/directory/to/locakhost.py $(: like for example: ~/downloads/locakhost)"
